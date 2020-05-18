@@ -15,7 +15,7 @@ export default class UserScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button title="test" onPress={() => console.log('test')} />
+        <Button title="User" onPress={() => console.log('test')} />
       </View>
     );
   }

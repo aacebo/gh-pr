@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import LoginButton from './LoginButton';
-import ILoginScreenProps from './LoginScreenProps';
+import loginService from './LoginService';
 
 const styles = StyleSheet.create({
   container: {
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LoginScreen extends Component<ILoginScreenProps> {
+export default class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -24,7 +24,6 @@ export default class LoginScreen extends Component<ILoginScreenProps> {
   }
 
   login() {
-    console.log('hit login');
-    this.props.onComplete();
+    loginService.get();
   }
 }
