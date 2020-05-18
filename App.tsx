@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    color: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import LoginScreen from './src/login/LoginScreen';
+import MainScreen from './src/main/MainScreen';
 
-export default class App extends Component {
+export default class App extends Component<{}, { auth?: boolean }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {};
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Opens up App.tsx to start working on your app!</Text>
-      </View>
+      this.state.auth ? (
+        <MainScreen></MainScreen>
+      ) : (
+        <LoginScreen onComplete={this.onAuthComplete.bind(this)} />
+      )
     );
+  }
+
+  onAuthComplete() {
+    this.setState({
+      auth: !this.state.auth,
+    });
   }
 }
