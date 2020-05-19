@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import LoginButton from './LoginButton';
-import loginService from './LoginService';
+import ILoginScreenProps from './LoginScreenProps';
 
 const styles = StyleSheet.create({
   container: {
@@ -14,7 +14,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LoginScreen extends Component {
+export default class LoginScreen extends Component<ILoginScreenProps> {
+  constructor(props: ILoginScreenProps) {
+    super(props);
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -24,6 +28,6 @@ export default class LoginScreen extends Component {
   }
 
   login() {
-    loginService.get();
+    this.props.navigation.navigate('Main');
   }
 }

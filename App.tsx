@@ -7,12 +7,7 @@ import MainScreen from './src/main/MainScreen';
 
 const Stack = createStackNavigator();
 
-export default class App extends Component<{}, { auth?: boolean }> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {};
-  }
-
+export default class App extends Component {
   render() {
     return (
       <NavigationContainer>
@@ -20,21 +15,10 @@ export default class App extends Component<{}, { auth?: boolean }> {
           animationTypeForReplace: 'pop',
           headerShown: false,
         }}>
-          {
-            !this.state.auth ? (
-              <Stack.Screen name="Login" component={LoginScreen} />
-            ) : (
-              <Stack.Screen name="Main" component={MainScreen} />
-            )
-          }
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Main" component={MainScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
-  }
-
-  onAuthComplete() {
-    this.setState({
-      auth: !this.state.auth,
-    });
   }
 }

@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator();
 export default class MainScreen extends Component {
   render() {
     return (
-      <NavigationContainer>
+      <NavigationContainer independent={true}>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: (props) => {
