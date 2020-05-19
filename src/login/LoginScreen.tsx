@@ -28,6 +28,6 @@ export default class LoginScreen extends Component<ILoginScreenProps> {
   }
 
   login() {
-    this.props.navigation.navigate('Main');
+    this.props.navigation.replace('Main');
   }
 }

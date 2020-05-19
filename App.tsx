@@ -12,7 +12,7 @@ export default class App extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{
-          animationTypeForReplace: 'pop',
+          animationTypeForReplace: 'push',
           headerShown: false,
         }}>
           <Stack.Screen name="Login" component={LoginScreen} />
