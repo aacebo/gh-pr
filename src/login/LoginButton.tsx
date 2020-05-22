@@ -21,7 +21,7 @@ export default class LoginButton extends Component<ILoginButtonProps> {
 
   render() {
     return (
-      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
+      <TouchableOpacity style={styles.container} onPress={this.props.onPress} disabled={this.props.disabled}>
         <Text style={styles.text}>{this.props.children}</Text>
       </TouchableOpacity>
     );

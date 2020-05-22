@@ -2,6 +2,7 @@
   "expo": {
     "name": "gh-pr",
     "slug": "gh-pr",
+    "scheme": "gh-pr",
     "platforms": [
       "ios",
       "android",
@@ -22,7 +23,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aacebo.gh-pr",
+      "buildNumber": "1.0.0"
     }
   }
 }

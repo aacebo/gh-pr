@@ -1,9 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import * as AuthSession from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
 
+import loginService from './LoginService';
 import LoginButton from './LoginButton';
 import ILoginScreenProps from './LoginScreenProps';
 
+WebBrowser.maybeCompleteAuthSession();
+
+const clientId = '051bf948d5685bc3b4e8';
+const clientSecret = 'b7ac2b32c0ba9a2721e14e93d15d65675ff3e7c5';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -14,20 +21,30 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LoginScreen extends Component<ILoginScreenProps> {
-  constructor(props: ILoginScreenProps) {
-    super(props);
-  }
+export default function LoginScreen(props: ILoginScreenProps) {
+  const req = AuthSession.useAuthRequest({
+    clientId,
+    clientSecret,
+    redirectUri: `${AuthSession.makeRedirectUri()}/Main`,
+    scopes: ['identity'],
+  }, {
+    authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+    tokenEndpoint: 'https://github.com/login/oauth/access_token',
+    revocationEndpoint: `https://github.com/settings/connections/applications/${clientId}`,
+  });
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <LoginButton onPress={this.login.bind(this)}>test buttons</LoginButton>
-      </View>
-    );
-  }
+  const login = async () => {
+    const out = await req[2]();
 
-  login() {
-    this.props.navigation.replace('Main');
-  }
+    if (out.type === 'success') {
+      loginService.code = (out as any).params.code;
+      props.navigation.replace('Main');
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <LoginButton onPress={() => login()}>Login</LoginButton>
+    </View>
+  );
 }
