@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Feather } from '@expo/vector-icons';
 
 import PullRequestsScreen from './pull-requests/PullRequestsScreen';
 import UserScreen from './user/UserScreen';
-import { SafeAreaView } from 'react-native';
 
 const Tab = createMaterialTopTabNavigator();
 

@@ -3,9 +3,12 @@ import { StyleSheet, View } from 'react-native';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 
+import http from '../core/http/HttpClient';
+
 import loginService from './LoginService';
 import LoginButton from './LoginButton';
 import ILoginScreenProps from './LoginScreenProps';
+import ILoginResult from './LoginResult';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -26,7 +29,17 @@ export default function LoginScreen(props: ILoginScreenProps) {
     clientId,
     clientSecret,
     redirectUri: `${AuthSession.makeRedirectUri()}/Main`,
-    scopes: ['identity'],
+    scopes: [
+      'user',
+      'public_repo',
+      'repo',
+      'repo_deployment',
+      'repo:status',
+      'read:repo_hook',
+      'read:org',
+      'read:public_key',
+      'read:gpg_key',
+    ],
   }, {
     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     tokenEndpoint: 'https://github.com/login/oauth/access_token',
@@ -38,6 +51,8 @@ export default function LoginScreen(props: ILoginScreenProps) {
 
     if (out.type === 'success') {
       loginService.code = (out as any).params.code;
+      const res = await http.post<any, ILoginResult>(`https://github.com/login/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&code=${loginService.code}`);
+      loginService.token = res.access_token;
       props.navigation.replace('Main');
     }
   };
