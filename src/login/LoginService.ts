@@ -1,5 +1,8 @@
 import { AsyncStorage } from 'react-native';
 
+import github from '../core/github/GithubClient';
+import userService from '../main/user/UserService';
+
 class LoginService {
   get code() { return this._code; }
   set code(v) {
@@ -20,6 +23,10 @@ class LoginService {
 
   private async _loadToken() {
     this._token = await AsyncStorage.getItem('@gh-pr:token');
+
+    if (this._token) {
+      userService.user = await github.user();
+    }
   }
 }
 
