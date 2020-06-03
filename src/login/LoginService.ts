@@ -8,7 +8,7 @@ import userService from '../main/user/UserService';
 import { LOGIN_STATE } from './LoginState';
 
 class LoginService {
-  private _state$ = new BehaviorSubject(LOGIN_STATE);
+  private readonly _state$ = new BehaviorSubject(LOGIN_STATE);
 
   get code$() { return this._state$.pipe(map(s => s.code)); }
   get code() { return this._state$.value.code; }
