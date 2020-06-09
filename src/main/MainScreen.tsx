@@ -7,9 +7,11 @@ import { Feather } from '@expo/vector-icons';
 import PullRequestsScreen from './pull-requests/PullRequestsScreen';
 import UserScreen from './user/UserScreen';
 
+import IMainScreenProps from './MainScreenProps';
+
 const Tab = createMaterialTopTabNavigator();
 
-export default class MainScreen extends Component {
+export default class MainScreen extends Component<IMainScreenProps> {
   render() {
     return (
       <SafeAreaView style={{

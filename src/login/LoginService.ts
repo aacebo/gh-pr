@@ -25,6 +25,9 @@ class LoginService {
     if (v) {
       AsyncStorage.setItem('@gh-pr:token', v);
       github.user().then(user => userService.user = user);
+    } else {
+      AsyncStorage.removeItem('@gh-pr:token');
+      userService.user = undefined;
     }
   }
 
