@@ -3,4 +3,4 @@ export interface ILoginState {
   readonly token?: string;
 }
 
-export const LOGIN_STATE: ILoginState = { };
+export default { } as ILoginState;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View , Button} from 'react-native';
 
+import RootState from '../../core/state/State';
 import github from '../../core/github/GithubClient';
 import pullRequestService from './PullRequestsService';
 
@@ -23,7 +24,7 @@ export default class PullRequestsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button title="test" onPress={() => console.log('test')} />
+        <Button title="test" onPress={() => console.log(RootState.pureValue)} />
       </View>
     );
   }

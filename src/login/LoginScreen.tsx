@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 
 import config from '../core/config/ConfigClient';
 import github from '../core/github/GithubClient';
-
-import userService from '../main/user/UserService';
 
 import loginService from './LoginService';
 import LoginButton from './LoginButton';
@@ -25,33 +23,35 @@ const styles = StyleSheet.create({
 });
 
 export default function LoginScreen(props: ILoginScreenProps) {
-  const req = AuthSession.useAuthRequest({
+  const [request, response, promptAsync] = AuthSession.useAuthRequest({
     clientId: config.config.auth.id,
     clientSecret: config.config.auth.secret,
-    redirectUri: `${AuthSession.makeRedirectUri()}/Main`,
+    redirectUri: `${AuthSession.makeRedirectUri({ useProxy: true })}`,
     scopes: config.config.auth.scope,
-
   }, {
     authorizationEndpoint: `${config.config.auth.base}/authorize`,
     tokenEndpoint: `${config.config.auth.base}/access_token`,
     revocationEndpoint: `https://github.com/settings/connections/applications/${config.config.auth.id}`,
   });
 
-  const login = async () => {
-    const out = await req[2]();
-
-    if (out.type === 'success') {
-      loginService.code = out.params.code;
-      const res = await github.token(loginService.code);
-      loginService.token = res.access_token;
-      userService.user = await github.user();
-      props.navigation.replace('Main');
-    }
+  const getToken = async (code: string) => {
+    const login = await github.token(code);
+    loginService.token = login.access_token;
+    props.navigation.replace('Main');
   };
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      loginService.code = response.params.code;
+      getToken(response.params.code);
+    }
+  }, [response]);
 
   return (
     <View style={styles.container}>
-      <LoginButton onPress={() => login()}>Login</LoginButton>
+      <LoginButton disabled={!request} onPress={() => promptAsync({ useProxy: true })}>
+        Sign in to Github
+      </LoginButton>
     </View>
   );
 }

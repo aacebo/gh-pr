@@ -1,14 +1,17 @@
-import IGithubPullRequest from '../../core/github/GithubPullRequest';
+import RootState from '../../core/state/State';
+import { createGetter } from '../../core/state/Getter';
+
+import PULL_REQUESTS_STATE from './PullRequestsState';
 
 class PullRequestsService {
-  get pullRequests() { return this._pullRequests; }
-  set pullRequests(v) {
-    this._pullRequests = v;
-  }
-  private _pullRequests: { [id: string]: IGithubPullRequest } = { };
+  private readonly _state$ = RootState.add('pullRequests', PULL_REQUESTS_STATE);
 
-  get entities() {
-    return Object.values(this._pullRequests);
+  get entities$() { return this._state$.get(createGetter(s => Object.values(s.pullRequests))); }
+
+  get pullRequests$() { return this._state$.get(createGetter(s => s.pullRequests)); }
+  get pullRequests() { return this._state$.value.pullRequests; }
+  set pullRequests(v) {
+    this._state$.set('pullRequests', v);
   }
 }
 

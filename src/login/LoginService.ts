@@ -1,45 +1,37 @@
-import { AsyncStorage } from 'react-native';
-import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import github from '../core/github/GithubClient';
+import RootState from '../core/state/State';
+import { createGetter } from '../core/state/Getter';
+
 import userService from '../main/user/UserService';
 
-import { LOGIN_STATE } from './LoginState';
+import LOGIN_STATE from './LoginState';
 
 class LoginService {
-  private readonly _state$ = new BehaviorSubject(LOGIN_STATE);
+  private readonly _state$ = RootState.add('login', LOGIN_STATE);
 
-  get code$() { return this._state$.pipe(map(s => s.code)); }
+  get code$() { return this._state$.get(createGetter(s => s.code)); }
   get code() { return this._state$.value.code; }
   set code(v) {
-    this._state$.next({
-      ...this._state$.value,
-      code: v,
-    })
+    this._state$.set('code', v);
   }
 
-  get token$() { return this._state$.pipe(map(s => s.token)); }
+  get token$() { return this._state$.get(createGetter(s => s.token)); }
   get token() { return this._state$.value.token; }
   set token(v) {
-    this._state$.next({
-      ...this._state$.value,
-      token: v,
-    });
+    this._state$.set('token', v);
 
-    AsyncStorage.setItem('@gh-pr:token', v);
+    if (v) {
+      AsyncStorage.setItem('@gh-pr:token', v);
+      github.user().then(user => userService.user = user);
+    }
   }
 
   constructor() {
-    this._loadToken();
-  }
-
-  private async _loadToken() {
-    this.token = await AsyncStorage.getItem('@gh-pr:token');
-
-    if (this.token) {
-      userService.user = await github.user();
-    }
+    AsyncStorage.getItem('@gh-pr:token')
+                .then(t => this.token = t)
+                .catch(err => console.error(err));
   }
 }
 
