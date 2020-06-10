@@ -23,11 +23,13 @@ class LoginService {
     this._state$.set('token', v);
 
     if (v) {
-      AsyncStorage.setItem('@gh-pr:token', v);
-      github.user().then(user => userService.user = user);
+      AsyncStorage.setItem('@gh-pr:token', v)
+                  .then(() => github.user().then(u => userService.user = u).catch(err => console.error(err)))
+                  .catch(err => console.error(err));
     } else {
-      AsyncStorage.removeItem('@gh-pr:token');
-      userService.user = undefined;
+      AsyncStorage.removeItem('@gh-pr:token')
+                  .then(() => userService.user = undefined)
+                  .catch(err => console.error(err));
     }
   }
 
