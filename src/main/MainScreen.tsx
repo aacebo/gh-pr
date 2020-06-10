@@ -18,7 +18,7 @@ export default class MainScreen extends Component<IMainScreenProps> {
         flex: 1,
         backgroundColor: 'black',
       }}>
-        <NavigationContainer independent={true}>
+        <NavigationContainer independent>
           <Tab.Navigator
             tabBarPosition="bottom"
             screenOptions={({ route }) => ({

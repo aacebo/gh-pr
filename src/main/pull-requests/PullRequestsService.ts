@@ -7,6 +7,7 @@ class PullRequestsService {
   private readonly _state$ = RootState.add('pullRequests', PULL_REQUESTS_STATE);
 
   get entities$() { return this._state$.get(createGetter(s => Object.values(s.pullRequests))); }
+  get entities() { return Object.values(this._state$.value.pullRequests); }
 
   get pullRequests$() { return this._state$.get(createGetter(s => s.pullRequests)); }
   get pullRequests() { return this._state$.value.pullRequests; }

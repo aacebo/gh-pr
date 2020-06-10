@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View , Button} from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import loginService from '../../login/LoginService';
 
@@ -16,6 +17,10 @@ const styles = StyleSheet.create({
 });
 
 export default class UserScreen extends Component<IUserScreenProps> {
+  private get _parentNavigation() {
+    return this.props.navigation.dangerouslyGetParent() as StackNavigationProp<any>;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -26,6 +31,6 @@ export default class UserScreen extends Component<IUserScreenProps> {
 
   signOut() {
     loginService.token = undefined;
-    this.props.navigation.navigate('Login');
+    this._parentNavigation.replace('Login');
   }
 }
