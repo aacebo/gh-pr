@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, View , Button, Image} from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
+import AsyncComponent from '../../core/async-component/AsyncComponent';
 import loginService from '../../login/LoginService';
-import userService from './UserService';
+import ISubScreenProps from '../SubScreenProps';
 
-import IUserScreenProps from './UserScreenProps';
+import userService from './UserService';
 import USER_STATE, { IUserState } from './UserState';
 
 const styles = StyleSheet.create({
@@ -25,22 +24,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class UserScreen extends Component<IUserScreenProps, IUserState> {
+export default class UserScreen extends AsyncComponent<ISubScreenProps, IUserState> {
   state = USER_STATE;
-  private readonly _destroy$ = new Subject<void>();
 
   private get _parentNavigation() {
     return this.props.navigation.dangerouslyGetParent() as StackNavigationProp<any>;
   }
 
   componentDidMount() {
-    userService.user$.pipe(takeUntil(this._destroy$))
-                     .subscribe(user => this.setState({ user }));
-  }
-
-  componentWillUnmount() {
-    this._destroy$.next();
-    this._destroy$.complete();
+    this.setAsyncState('user', userService.user$);
   }
 
   render() {
